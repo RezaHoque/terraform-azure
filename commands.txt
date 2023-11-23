@@ -1,0 +1,19 @@
+#to start
+terraform init
+
+#to format the script
+terraform fmt
+
+#to validate the script
+terraform validate
+
+
+#plan
+terraform plan
+
+#apply
+terraform apply
+
+#to import existing resource into .tfstate file
+$the following is to import an existing resource group into .tfstate file.
+terraform import [azurerm_resource_group.rg]/subscriptions/[subscription id]/resourceGroups/[resource group name]
