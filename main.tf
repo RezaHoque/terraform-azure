@@ -6,6 +6,13 @@ terraform {
       version = "~> 3.0.2"
     }
   }
+  # this is to keep the state file in azure storage account
+  backend "azurerm" {
+    resource_group_name  = "tfstate"
+    storage_account_name = "tfstateilyoc"
+    container_name       = "tfstate"
+    key                  = "dev.terraform.tfstate"
+  }
   required_version = ">= 1.1.0"
 }
 
