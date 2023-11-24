@@ -38,11 +38,37 @@ resource "azurerm_resource_group" "rg" {
   }
 }
 
-#creating linus app service plan
+#creating linux app service plan
 resource "azurerm_service_plan" "appserviceplan" {
   name                = "app-asp-${azurerm_resource_group.rg.name}"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   os_type             = "Linux"
   sku_name            = "B1"
+}
+
+#creating app service
+resource "azurerm_app_service" "appservice" {
+  name                = "appservice-${azurerm_resource_group.rg.name}"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  app_service_plan_id = azurerm_service_plan.appserviceplan.id
+  app_settings = {
+    "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = "false"
+    #settings for private docker registry
+    /*
+    DOCKER_REGISTRY_SERVER_URL           = "https://index.docker.io"
+    DOCKER_REGISTRY_SERVER_USERNAME      = "ilyas"
+    DOCKER_REGISTRY_SERVER_PASSWORD      = "ilyas"
+    */
+  }
+  # Configure Docker Image to load on start
+  site_config {
+    always_on        = true
+    linux_fx_version = "DOCKER|appsvcsample/static-site:latest"
+    dotnet_framework_version = "v5.0"
+  }
+  identity {
+    type = "SystemAssigned"
+  }
 }
